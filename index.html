@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rafael Guimaraens Souza — Data Science & ML</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: #2a2a35;
+      --accent: #7c5cfc;
+      --accent2: #c084fc;
+      --green: #4ade80;
+      --text: #e8e8f0;
+      --muted: #8888a0;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Sora', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: var(--accent2);
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .nav-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(192,132,252,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+    .hero-title .accent { color: var(--accent); }
+    .hero-subtitle {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.55s;
+    }
+    .hero-desc {
+      max-width: 540px;
+      font-size: 1.05rem;
+      color: #aaaabc;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.7s;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.85s;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* STATS */
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 1s;
+    }
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+    }
+    .divider {
+      width: 100%;
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* SOBRE */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: #aaaabc;
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+    .about-text strong { color: var(--text); }
+    .about-cards {
+      display: grid;
+      gap: 1rem;
+    }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .info-card-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .info-card-value {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .skill-block-title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .skill-item {
+      margin-bottom: 1.5rem;
+    }
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .skill-name { font-size: 0.9rem; color: var(--text); }
+    .skill-level {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .skill-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 1.2s ease;
+    }
+
+    .soft-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .soft-tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .soft-tag:hover { border-color: var(--accent); }
+
+    /* FORMAÇÃO */
+    .timeline { display: flex; flex-direction: column; gap: 2rem; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .timeline-date {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding-top: 0.4rem;
+      text-align: right;
+    }
+    .timeline-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .timeline-card:hover { border-color: var(--accent); }
+    .timeline-card::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem; top: 1.2rem;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .timeline-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-card-org {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+    }
+    .timeline-card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* CONTATO */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .contact-intro {
+      font-size: 1rem;
+      color: #aaaabc;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .contact-icon {
+      width: 40px; height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .contact-value {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .contact-value a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .contact-value a:hover { color: var(--accent2); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .timeline-date { text-align: left; }
+      .timeline-card::before { display: none; }
+      .hero-stats { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Rafael.dev</span>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#habilidades">Habilidades</a></li>
+    <li><a href="#formacao">Formação</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="nav-badge">Disponível para oportunidades</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="max-width:100%; padding-left:clamp(1.5rem,5vw,6rem); padding-right:clamp(1.5rem,5vw,6rem);">
+  <div class="hero-eyebrow">Portfólio Profissional</div>
+  <h1 class="hero-title">Rafael <span class="accent">Guimaraens</span>.</h1>
+  <p class="hero-subtitle">Data Science & Machine Learning — CEUB · 2025</p>
+  <p class="hero-desc">Estudante apaixonado por dados, matemática e a interseção entre tecnologia e negócios. Construindo fundamentos sólidos em Python, estatística e ML — uma linha de código por vez.</p>
+  <div class="hero-ctas">
+    <a href="#habilidades" class="btn btn-primary">↓ Ver habilidades</a>
+    <a href="#contato" class="btn btn-ghost">Entre em contato</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">19</div>
+      <div class="stat-label">Anos</div>
+    </div>
+    <div>
+      <div class="stat-num">2+</div>
+      <div class="stat-label">Cursos concluídos</div>
+    </div>
+    <div>
+      <div class="stat-num">5+</div>
+      <div class="stat-label">Hard Skills</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-label">01 — Sobre mim</div>
+  <h2 class="section-title">Quem sou eu</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Sou <strong>Rafael Guimaraens Souza</strong>, 19 anos, estudante do primeiro semestre de <strong>Ciência de Dados e Machine Learning no CEUB</strong>. Desde cedo cultivei uma curiosidade intensa pelo "novo" — seja na tecnologia, nos números ou nas histórias que os dados contam.</p>
+      <p>Acredito que o diferencial de um bom cientista de dados está na combinação de <strong>rigor técnico com visão de negócio</strong> — entender não só como os algoritmos funcionam, mas por que eles importam para o mundo real.</p>
+      <p>Além da área técnica, tenho conhecimento avançado em <strong>teoria musical</strong>, o que me deu habilidades únicas em padrões, estrutura e disciplina — qualidades que transparecem na minha abordagem analítica.</p>
+      <p>Falo inglês em nível intermediário e estou em constante busca por aprendizado — seja em cursos, livros ou conversas desafiadoras.</p>
+    </div>
+    <div class="about-cards">
+      <div class="info-card">
+        <span class="info-card-label">Localização</span>
+        <span class="info-card-value">Brasília — DF, Brasil</span>
+      </div>
+      <div class="info-card">
+        <span class="info-card-label">Formação atual</span>
+        <span class="info-card-value">Ciência de Dados & ML · CEUB</span>
+      </div>
+      <div class="info-card">
+        <span class="info-card-label">Idiomas</span>
+        <span class="info-card-value">Português (nativo) · Inglês (intermediário)</span>
+      </div>
+      <div class="info-card">
+        <span class="info-card-label">Interesse principal</span>
+        <span class="info-card-value">Machine Learning · Análise de Dados · Estatística</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- HABILIDADES -->
+<section id="habilidades">
+  <div class="section-label">02 — Habilidades técnicas</div>
+  <h2 class="section-title">Hard Skills</h2>
+  <div class="skills-grid">
+    <div>
+      <div class="skill-block-title">Técnicas</div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">Python</span><span class="skill-level">Intermediário</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">Matemática Avançada</span><span class="skill-level">Intermediário</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">Estatística</span><span class="skill-level">Intermediário</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">Inglês</span><span class="skill-level">Intermediário</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">Teoria Musical</span><span class="skill-level">Avançado</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">R</span><span class="skill-level">Iniciante</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:25%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-top"><span class="skill-name">SQL</span><span class="skill-level">Iniciante</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:25%"></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-bottom:1rem;">03 — Habilidades comportamentais</div>
+      <h3 style="font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;">Soft Skills</h3>
+      <div class="soft-grid">
+        <div class="soft-tag">🎯 Perfeccionismo na medida certa</div>
+        <div class="soft-tag">✅ Comprometimento com a qualidade</div>
+        <div class="soft-tag">🔄 Adaptabilidade</div>
+        <div class="soft-tag">🤝 Trabalho em grupo</div>
+        <div class="soft-tag">🏆 Comportamento de liderança</div>
+        <div class="soft-tag">🔭 Curiosidade pelo novo</div>
+        <div class="soft-tag">📈 Visão de negócio</div>
+        <div class="soft-tag">💬 Comunicação & Storytelling</div>
+        <div class="soft-tag">🧠 Busca contínua por aprendizado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FORMAÇÃO -->
+<section id="formacao">
+  <div class="section-label">04 — Formação & Certificações</div>
+  <h2 class="section-title">Trajetória</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2025 — Presente</div>
+      <div class="timeline-card">
+        <div class="timeline-card-title">Ciência de Dados e Machine Learning</div>
+        <div class="timeline-card-org">CEUB — Centro Universitário de Brasília · 1º Semestre</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Março 2025 · 20 horas</div>
+      <div class="timeline-card">
+        <div class="timeline-card-title">Intensivo de Cálculo 1</div>
+        <div class="timeline-card-org">Universidade de Brasília (UnB)</div>
+        <div class="timeline-card-desc">Certificado de conclusão</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Setembro 2024 · 8 horas</div>
+      <div class="timeline-card">
+        <div class="timeline-card-title">Jornada Python</div>
+        <div class="timeline-card-org">Hashtag Treinamentos</div>
+        <div class="timeline-card-desc">Fundamentos e aplicações de Python</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="section-label">05 — Contato</div>
+  <h2 class="section-title">Vamos conversar?</h2>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-intro">Aberto a estágios, projetos e colaborações na área de dados e tecnologia.</p>
+      <div class="contact-item">
+        <div class="contact-icon">✉</div>
+        <div>
+          <div class="contact-label">E-mail</div>
+          <div class="contact-value"><a href="mailto:rafaguimaraens@hotmail.com">rafaguimaraens@hotmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Localização</div>
+          <div class="contact-value">Brasília, DF — Brasil</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <a href="mailto:rafaguimaraens@hotmail.com" class="btn btn-primary" style="width:100%;justify-content:center;font-size:0.85rem;">Enviar mensagem →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Rafael Guimaraens Souza — Ciência de Dados & Machine Learning
+</footer>
+
+</body>
+</html>
